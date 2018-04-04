@@ -10,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        File file = new File("C:\\");
+        File file = new File("E:\\AndroidSDK");
 
         File fileTree = new File("C:\\JavaTest", "fileTree.txt");
         try {
@@ -26,14 +26,7 @@ public class Main {
             e.printStackTrace();
         }
 
-        try {
-            FileWriter writer = new FileWriter(fileTree);
 
-        }
-        catch (IOException i)
-        {
-            System.out.println("Жопа");
-        }
 
     }
 
@@ -41,16 +34,30 @@ public class Main {
     public static void showFileTree(File file) {
 
         if (!file.isDirectory()) {
-            System.out.println(file.getName());
+
+
+            try {
+                FileWriter writer = new FileWriter("E:\\filetree.txt",true);
+                writer.write(file.getName());
+                writer.append(System.lineSeparator() + " ");
+                writer.flush();
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         if (file.isDirectory()) {
             try {
-                System.out.println(file.getCanonicalFile());
+
                 File[] child = file.listFiles();
 
                 for (int i = 0; i < child.length; i++) {
-                    System.out.println(child[i].getParent());
+                    FileWriter writer = new FileWriter("E:\\filetree.txt",true);
+                    writer.write(file.getName());
+                    writer.append(System.lineSeparator());
+                    writer.flush();
+                    writer.close();
                     showFileTree(child[i]);
                 }
 
