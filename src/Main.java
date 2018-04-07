@@ -1,6 +1,4 @@
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Created by Konstantin2 on 03.04.2018.
@@ -10,63 +8,93 @@ public class Main {
 
     public static void main(String[] args) {
 
-        File file = new File("E:\\AndroidSDK");
+        File file = new File("E:\\Downloads");
+        File file2 = new File("E:\\filetree.txt");
 
-        File fileTree = new File("C:\\JavaTest", "fileTree.txt");
+
+
+        String hierarchy = "";
+
+
+        Thread writeThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                writeFileTree(file, hierarchy);
+            }
+        });
+
+        Thread readThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                readFileTree(file2);
+
+            }
+        });
+
+        writeThread.start();
+        readThread.start();
+
+
+
+    }
+
+
+    public synchronized static void writeFileTree(File file, String s) {
+
+
         try {
-            fileTree.createNewFile();
+
+
+            if (file.isDirectory())
+
+            {
+                File child[] = file.listFiles();
+
+                for (int i = 0; i < child.length; i++) {
+
+                    int numberOfSpaces = 0;
+
+
+                    FileWriter writer = new FileWriter("E:\\filetree.txt", true);
+                    writer.write(child[i].getAbsolutePath() + System.lineSeparator());
+                    writer.flush();
+                    writer.close();
+                    writeFileTree(child[i], s);
+
+                }
+
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+
+    }
+
+
+    public synchronized static void readFileTree(File file) {
+
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            while (reader.lines().iterator().hasNext()) {
+                String s = reader.readLine();
+                System.out.println(s);
+            }
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
 
-        try {
-            showFileTree(file);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-
-    }
-
-
-    public static void showFileTree(File file) {
-
-        if (!file.isDirectory()) {
-
-
-            try {
-                FileWriter writer = new FileWriter("E:\\filetree.txt",true);
-                writer.write(file.getName());
-                writer.append(System.lineSeparator() + " ");
-                writer.flush();
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        if (file.isDirectory()) {
-            try {
-
-                File[] child = file.listFiles();
-
-                for (int i = 0; i < child.length; i++) {
-                    FileWriter writer = new FileWriter("E:\\filetree.txt",true);
-                    writer.write(file.getName());
-                    writer.append(System.lineSeparator());
-                    writer.flush();
-                    writer.close();
-                    showFileTree(child[i]);
-                }
-
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
 
 }
+
+
+
