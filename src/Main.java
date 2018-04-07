@@ -1,5 +1,7 @@
 import java.io.*;
 
+import static java.lang.Thread.State.*;
+
 /**
  * Created by Konstantin2 on 03.04.2018.
  */
@@ -13,13 +15,12 @@ public class Main {
 
 
 
-        String hierarchy = "";
 
 
         Thread writeThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                writeFileTree(file, hierarchy);
+                writeFileTree(file);
             }
         });
 
@@ -32,14 +33,14 @@ public class Main {
         });
 
         writeThread.start();
-        readThread.start();
-
+       if (writeThread.getState()==RUNNABLE)
+           readThread.start();
 
 
     }
 
 
-    public synchronized static void writeFileTree(File file, String s) {
+    public synchronized static void writeFileTree(File file) {
 
 
         try {
@@ -56,10 +57,21 @@ public class Main {
 
 
                     FileWriter writer = new FileWriter("E:\\filetree.txt", true);
-                    writer.write(child[i].getAbsolutePath() + System.lineSeparator());
+
+                    String space = child[i].getAbsolutePath();
+
+                    for (char c : space.toCharArray()) {
+                        if (c == '\\')
+                            numberOfSpaces++;
+                    }
+
+
+                    writer.write(spaces(numberOfSpaces) + child[i].getAbsolutePath() + System.lineSeparator());
                     writer.flush();
                     writer.close();
-                    writeFileTree(child[i], s);
+
+
+                    writeFileTree(child[i]);
 
                 }
 
@@ -93,6 +105,17 @@ public class Main {
 
     }
 
+    public static String spaces(int numberOfSpaces) {
+        String spaces = "";
+
+
+        for (int i = 0; i < numberOfSpaces; i++) {
+            spaces += " ";
+
+        }
+
+        return spaces;
+    }
 
 }
 
