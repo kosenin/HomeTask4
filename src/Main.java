@@ -10,8 +10,8 @@ public class Main {
 
     public static void main(String[] args) {
 
-        File file = new File("E:\\Downloads");
-        File file2 = new File("E:\\filetree.txt");
+        File file = new File("C:\\dell");
+        File file2 = new File("C:\\filetree.txt");
 
 
 
@@ -56,7 +56,7 @@ public class Main {
                     int numberOfSpaces = 0;
 
 
-                    FileWriter writer = new FileWriter("E:\\filetree.txt", true);
+                    FileWriter writer = new FileWriter("c:\\filetree.txt", true);
 
                     String space = child[i].getAbsolutePath();
 
